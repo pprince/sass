@@ -3,6 +3,43 @@
 * Table of contents
 {:toc}
 
+## 3.4.0 (Unreleased)
+
+### Using `&` in SassScript
+
+For a long time, Sass has supported a special
+{file:SASS_REFERENCE.md#parent-selector "parent selector", `&`}, which is used
+when nesting selectors to describe how a nested selector relates to the
+selectors above it. Until now, this has only been usable in selectors, but now
+it can be used in SassScript as well.
+
+In a SassScript expression, `&` refers to the current parent selector. It's a
+comma-separated list of space-separated lists. For example:
+
+    .foo.bar .baz.bang, .bip.qux {
+      $selector: &;
+    }
+
+The value of `$selector` is now `((".foo.bar" ".baz.bang"), ".bip.qux")`. The
+compound selectors are quoted here to indicate that they're strings, but in
+reality they would be unquoted.
+
+The SassScript `&` may be used in selectors using `#{}` interpolation. By
+treating it as a SassScript value, you can do different things with it than you
+can when treating it as a selector. When `&` is used as a selector, it can only
+appear at the beginning of a compound selector, similarly to a type selector
+like `a` or `h1`. When used with `#{}`, it can go anywhere. For example:
+
+    .badge {
+      @at-root #{&}-info { ... }
+      @at-root #{&}-header { ... }
+    }
+
+Produces:
+
+    .badge-info { ... }
+    .badge-header { ... }
+
 ## 3.3.0 (Unreleased)
 
 #### `@at-root`
